@@ -2,8 +2,8 @@ package hikari.events
 
 import hikari.annotations.EventHandler
 import hikari.exception.EventBusException
-import java.lang.IllegalArgumentException
 import kotlin.reflect.KCallable
+import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
@@ -25,14 +25,16 @@ class EventBus {
             }
     }
 
-    fun fireEvent(event: Event, vararg args: Any?) {
+    suspend fun fireEvent(event: Event, vararg args: Any?) {
         eventHandlers[event]?.forEach { `class` ->
             `class`.value.forEach {
                 try {
-                    it.call(`class`.key, *args)
-                } catch(e: IllegalArgumentException) {
-                    throw EventBusException("Handler `$it` for event $event does not have the correct parameters. " +
-                            "Please consult documentation for the correct parameters for this event.")
+                    it.callSuspend(`class`.key, *args)
+                } catch (e: IllegalArgumentException) {
+                    throw EventBusException(
+                        "Handler `$it` for event $event does not have the correct parameters. " +
+                                "Please consult documentation for the correct parameters for this event."
+                    )
                 }
             }
         }

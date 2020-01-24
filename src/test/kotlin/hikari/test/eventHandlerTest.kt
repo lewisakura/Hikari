@@ -5,7 +5,7 @@ import hikari.annotations.EventHandler
 import hikari.events.Event
 
 @ExperimentalStdlibApi
-fun main() {
+suspend fun main() {
     val hi = Hikari()
 
     hi.eventBus.addEventHandler(test())
@@ -15,12 +15,12 @@ fun main() {
 
 class test {
     @EventHandler(Event.MESSAGE_CREATE)
-    fun test(test: String) {
+    suspend fun test(test: String) {
         println("event handler called $test")
     }
 
     @EventHandler(Event.MESSAGE_CREATE)
-    fun test2() {
+    suspend fun test2() {
         println("event handler 2 called")
     }
 }
