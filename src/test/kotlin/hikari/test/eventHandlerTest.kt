@@ -8,20 +8,15 @@ import hikari.events.Event
 fun main() {
     val hi = Hikari()
 
-    hi.addEventHandler(test())
-    println(hi.eventHandlers)
+    hi.eventBus.addEventHandler(test())
 
-    hi.eventHandlers[Event.MESSAGE_CREATE]?.forEach { `class` ->
-        `class`.value.forEach {
-            it.call(`class`.key)
-        }
-    }
+    hi.eventBus.fireEvent(Event.MESSAGE_CREATE, "abc")
 }
 
 class test {
     @EventHandler(Event.MESSAGE_CREATE)
-    fun test() {
-        println("event handler called")
+    fun test(test: String) {
+        println("event handler called $test")
     }
 
     @EventHandler(Event.MESSAGE_CREATE)
